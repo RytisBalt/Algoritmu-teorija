@@ -38,11 +38,10 @@ bool Generavimas()
 
     vector<vector<int>> gretimumoMatrica(V); //Pasidarom vektorių, kuriame laikysim vienetukus arba nuliukus
 
-    // Generate the adjacency list for each vertex
+    //Sukuriam gretimumo matrica kiekvienai virsunei
     for (int i = 0; i < V; i++) {
         for (int j = 0; j < V; j++) {
-            // Skip the diagonal elements (i.e. where i == j)
-            // since they represent a vertex connecting to itself
+            //praleidziam istrizus narius
             if (i == j) continue;
             int value = dis(gen); //sukuriam random reiksmes tarp 1 ir 0
             if (value == 1) {
@@ -52,22 +51,22 @@ bool Generavimas()
         }
     }
 
-    for (int i = 0; i < V; i++) { //pro eilutes
+    for (int i = 0; i < V; i++) { 
         cout << "{";
-        for (int j = 0; j < V; j++) { //pro stulpelius
+        for (int j = 0; j < V; j++) { 
             bool virsune = false;
-            for (int k = 0; k < gretimumoMatrica[i].size(); k++) { //patikrinam ar elementas yra gretimumo matricos vektoriui
-                if (gretimumoMatrica[i][k] == j) { //jei yra virsune = true ir breakina loopa, jei ne virsune = false;
+            for (int k = 0; k < gretimumoMatrica[i].size(); k++) { 
+                if (gretimumoMatrica[i][k] == j) { 
                     virsune = true;
                     break;
                 }
             }
             cout << virsune; //isprintam virsunes reiksmes
-            if (j < V - 1) cout << ", "; //kiekviena ne paskutini elementa atskiriame kableliais
+            if (j < V - 1) cout << ", "; 
         }
         cout << "}," << endl; 
     }
-    return true; //returninam true jei praejome visus elementus masyve
+    return true; 
 }
 
 int main()
@@ -114,3 +113,4 @@ cout << endl; cout << "Matrica sukurta, dabar atkomentuokite programoje ta dali 
     return 0;
     
 }
+
