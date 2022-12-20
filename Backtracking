@@ -1,0 +1,116 @@
+#include <iostream>
+#include <vector>
+#include <random>
+
+using namespace std;
+
+#define V 10 //Viršūnių kiekis
+
+bool Tinkama(int k, bool grafas[V][V], int spalvos[], int c) //Funkcija nusakanti ar dabartine spalva c yra tinkama
+{
+    for (int i = 0; i < V; i++) //Loopas iterajuoantis pro visas viršunes grafe
+        if (grafas[k][i] == 1 && c == spalvos[i])  //Jei jos gretimumo matricoj 
+            return false; //Grazinama reiksme false, reiskia negalime priskirti spalvos tai virsunei, nes reiskia, kad kazkuri is gretimu jau turi ta spalva
+
+    return true; //Grazina reiksme true, reiskia galime priskirti spalva tai virsunei ir tai reiskia, kad ju kaimynes tos spalvos neturi
+}
+
+
+bool Spalvinimas(bool graph[V][V], int m, int spalvos[], int k) //k = virsune kuria spalvinsim  
+{
+    if (k == V) //Jei visos virsunems yra priskirta spalva return true
+        return true;
+    for (int c = 1; c <= m; c++) {  //Pradedam spalvu priskyrimo loopa.
+        if (Tinkama(k, graph, spalvos, c)) { //Ziurim ar tenkinama sąlyga
+            spalvos[k] = c; //Masyvas, kuris laiko spalva priskirtai viršunei 
+           if (Spalvinimas(graph, m, spalvos, k + 1) == true) //rekursine funkcija patikrinti visom grafo virsunem
+                return true; //Jei praejom pro visas viršunes reiškmė spalvinimo funkcijos yra true
+        }
+    }
+
+   return false; //Jei nepraejom pro visas viršunes spalvinimo funkcijos reikšmė yra false
+}
+bool Generavimas()
+{
+    random_device rd;
+    mt19937 gen(rd());
+    uniform_int_distribution<> dis(0, 1);
+
+    vector<vector<int>> gretimumoMatrica(V); //Pasidarom vektorių, kuriame laikysim vienetukus arba nuliukus
+
+    // Generate the adjacency list for each vertex
+    for (int i = 0; i < V; i++) {
+        for (int j = 0; j < V; j++) {
+            // Skip the diagonal elements (i.e. where i == j)
+            // since they represent a vertex connecting to itself
+            if (i == j) continue;
+            int value = dis(gen); //sukuriam random reiksmes tarp 1 ir 0
+            if (value == 1) {
+                gretimumoMatrica[i].push_back(j); //jei value yra 1 pushinam ta pati ir eilutese ir stulpeliuose
+                gretimumoMatrica[j].push_back(i);
+            }
+        }
+    }
+
+    for (int i = 0; i < V; i++) { //pro eilutes
+        cout << "{";
+        for (int j = 0; j < V; j++) { //pro stulpelius
+            bool virsune = false;
+            for (int k = 0; k < gretimumoMatrica[i].size(); k++) { //patikrinam ar elementas yra gretimumo matricos vektoriui
+                if (gretimumoMatrica[i][k] == j) { //jei yra virsune = true ir breakina loopa, jei ne virsune = false;
+                    virsune = true;
+                    break;
+                }
+            }
+            cout << virsune; //isprintam virsunes reiksmes
+            if (j < V - 1) cout << ", "; //kiekviena ne paskutini elementa atskiriame kableliais
+        }
+        cout << "}," << endl; 
+    }
+    return true; //returninam true jei praejome visus elementus masyve
+}
+
+int main()
+{
+    string pasirinkimas;
+    int m = 3;
+    int spalvos[V];
+    cout << "Ar norite random sugeneruoto grafo? (Jei taip: irasykite ,,Taip'', jei ne, irasykite bet ka kitą" << endl;
+    cin >> pasirinkimas;
+    if (pasirinkimas == "Taip")
+    {
+        Generavimas();
+;
+cout << endl; cout << "Matrica sukurta, dabar atkomentuokite programoje ta dali kur yra grafas, irasykite nauja gretimumo matrica ir paleiskite programa" << endl;
+    }
+    else
+    {
+        cout << "Pasitikrinkite ar teisingai parasete arba programoj irasykite savo grafo gretimumo matrica" << endl;
+    }
+    bool grafas[V][V] = {
+        {0, 1, 1, 0, 0, 0, 0, 0, 0, 0}, //1 Klaipedos apskritis
+        { 1, 0, 1, 1, 0, 0, 0, 0, 0, 0}, //2 Telšių apskritis
+        { 1, 1, 0, 1, 1, 1, 0, 0, 0, 0}, //3 Tauragės apskritis
+        { 0, 1, 1, 0, 1, 0, 0, 0, 0, 1}, //4 Šiaulių apskritis
+        { 0, 0, 1, 1, 0, 1, 1, 1, 0, 1}, //5 Kauno apskritis
+        { 0, 0, 1, 0, 1, 0, 1, 0, 0, 0}, //6 Marijampolės apskritis
+        { 0, 0, 0, 0, 1, 1, 0, 1, 0, 0}, //7 Alytaus apskritis
+        { 0, 0, 0, 0, 1, 0, 1, 0, 1, 1}, //8 Vilniaus apskritis
+        { 0, 0, 0, 0, 0, 0, 0, 1, 0, 1}, //9 Utenos apskritis
+        { 0, 0, 0, 1, 1, 0, 0, 1, 1, 0}, //10 Panevėžio apskritis 
+
+
+    };
+
+    if (Spalvinimas(grafas, m, spalvos, 0) == false) {
+        cout << "Sprendiniu nera";
+    }
+    else {
+        cout << "Sprendinys yra! " << endl << endl;
+        for (int i = 0; i < V; i++)
+
+        cout << (i + 1) << " Apskrities" << " " << "Spalva" << "" << spalvos[i] << " " << endl; 
+    }
+    return 0;
+    
+}
