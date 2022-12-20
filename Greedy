@@ -1,0 +1,105 @@
+#include <iostream>
+#include <vector>
+
+
+using namespace std;
+
+void Spalvinimas(vector<int> grafas[], int V)
+{
+    vector<int> color(V, -1); //visos spalvos tampa -1
+    color[0]  = 1; //pirmoji virsune (0) = 1 spalva
+
+    vector<bool> Priskirtos(V); //Sukuriamas vektorius patikrint ar yra priskirtos spalvos
+
+    for (int u = 1; u < V; u++) //Pradedam iteracija
+    {
+        fill(Priskirtos.begin(), Priskirtos.end(), false); //Nustatom priskirtos = false
+        
+        for (auto p : grafas[u]) //Praeinam pro prijungtas virsunes ir ziurim ar yra priskirtos spalvos jom
+            if (color[p] != -1)
+                Priskirtos[color[p]] = true; //Paziurim kokios spalvos yra priskirtos kaimynems
+
+        // Find the first available color
+        int c; //
+        for (c = 1; c <= V; c++)
+            if (Priskirtos[c] == false) //Ziurim visas galimas spalvas kol randama
+                break; //Breakinam loopa
+
+        color[u] = c; //Priskiriam spalva tai virsunei
+        //Loopas kartojamas visom virsunei
+    }
+
+    for (int u = 0; u < V; u++)
+        cout << (u) <<  " Apskrities" << " Spalva" <<  color[u] << endl;
+}
+
+void Briauna(vector<int> grafas[],
+             int u, int v)
+{
+    grafas[u].emplace_back(v);
+    grafas[v].emplace_back(u);
+}
+void Generavimas(int V){
+  srand(time(0));
+        int pasirinkimas;
+
+        // This program will create some sequence of random
+        // numbers on every program run within range N
+        cout << "Kiek briaunu norite sugeneruoti?" << endl;
+        cin >> pasirinkimas;
+        
+        for (int i = 0; i < pasirinkimas; i++) {
+            int x = rand() % V;
+            int y = rand() % V;
+
+            if (x != y ) {
+                cout << "Briauna " << "(grafas, " << x << "," << y << ");" << endl;
+            }
+        }
+}
+
+int main()
+{
+  string p;
+    int V = 10;
+    vector<int> grafas[V];
+  cout << "Ar norite random sugeneruoto grafo? (Jei taip: irasykite ,,Taip'', jei ne, irasykite bet ka kitą" << endl;
+    cin >> p;
+if (p == "Taip")
+    {
+        Generavimas(V);
+;
+cout << endl; cout << "Sukurtos random briaunos, jum beliko tik irasyti main programoj" << endl;
+      return 0; 
+    }
+    else
+    {
+        cout << "Pasitikrinkite ar teisingai parasete arba programoj irasykite savo norimas briaunas" << endl;
+    }
+
+Briauna (grafas, 0,1);
+Briauna (grafas, 0,2);
+Briauna (grafas, 1,2);
+Briauna (grafas, 1,3);
+Briauna (grafas, 2,3);
+Briauna (grafas, 2,4);
+Briauna (grafas, 2,5);
+Briauna (grafas, 3,4);
+Briauna (grafas, 3,9);
+Briauna (grafas, 4,5);
+Briauna (grafas, 4,6);
+Briauna (grafas, 4,7);
+Briauna (grafas, 4,9);
+Briauna (grafas, 5,6);
+Briauna (grafas, 6,7);
+Briauna (grafas, 7,8);
+Briauna (grafas, 7,9);
+Briauna (grafas, 8,9);
+
+
+
+
+    Spalvinimas(grafas, V);
+    cout << endl;
+    return 0;
+}
